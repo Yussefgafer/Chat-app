@@ -1,0 +1,7 @@
+<div class="my-msg" style="background-color: null;">null: اهلا</div> <span style="display:none;">10/14/2024, 1:05:04 PM</span>
+<div class="my-msg" style="background-color: null;">null: اهلا</div> <span style="display:none;">10/14/2024, 1:05:08 PM</span>
+<div class="my-msg" style="background-color: #00ff00;">Ahmed: Suiiii</div> <span style="display:none;">10/14/2024, 1:05:17 PM</span>
+<div class="my-msg" style="background-color: #00ff00;">Ahmed: اهلا</div> <span style="display:none;">10/14/2024, 1:05:24 PM</span>
+<div class="my-msg" style="background-color: null;">null: Ggg</div> <span style="display:none;">10/14/2024, 1:07:25 PM</span>
+<div class="my-msg" style="background-color: #0000ff;">Mohamed: مرحلا</div> <span style="display:none;">10/14/2024, 1:08:26 PM</span>
+<div class="my-msg" style="background-color: null;">null: نننن</div> <span style="display:none;">10/16/2024, 7:56:31 PM</span>

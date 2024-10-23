@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+  <title></title>
+</head>
+
+<body>
+
+</body>
+<script>
+  const overlay = document.getElementById("overlay");
+  const showPopupBtn = document.getElementById("showPopupBtn");
+  const popup = document.getElementById("popup");
+  const closePopupBtn = document.getElementById("closePopupBtn");
+  const popupText = document.getElementById("popupText");
+
+  const floatingMenu = document.createElement('div');
+  floatingMenu.className = 'floating-menu';
+  floatingMenu.innerHTML = `
+      <input id="username" type="text" placeholder="Enter your name..." autofocus>
+      <input id="color" type="color" value="#ffffff" placeholder="Choose your background color" />
+      <button id="setUser">Set</button>
+      <!--
+      <label id="overlay" class="hidden" for="X"></label>
+<div id="popup" class="hidden">
+  <div class="popup-content">
+    <p id="popupText">
+      <input type="text">
+      <input type="color" name="" id="">
+    </p>
+  </div>
+</div>-->
+    `;
+  document.body.appendChild(floatingMenu);
+
+
+  // Function to show the popup with custom text
+  function showPopup(message) {
+    popup.classList.remove("hidden"); // Show the popup
+    overlay.classList.remove("hidden");
+  }
+
+
+
+  function ok() {
+    popup.classList.add("hidden");
+    overlay.classList.add("hidden");
+  }
+
+  showPopup();
+
+
+  const usernameInput = document.getElementById('username');
+  const colorInput = document.getElementById('color');
+  const setUserButton = document.getElementById('setUser');
+
+  // Check if user data is already in sessionStorage
+  const username = sessionStorage.getItem('username');
+  const color = sessionStorage.getItem('color');
+
+  if (username && color) {
+    usernameInput.value = username;
+    colorInput.value = color;
+    input.disabled = false;
+    sendFileButton.disabled = false;
+    floatingMenu.style.display = 'none'; // Hide floating menu
+    ok();
+  }
+
+  setUserButton.addEventListener('click', function() {
+    const name = usernameInput.value;
+    const colorValue = colorInput.value;
+    sessionStorage.setItem('username', name);
+    sessionStorage.setItem('color', colorValue);
+    input.disabled = false;
+    sendFileButton.disabled = false;
+    floatingMenu.style.display = 'none'; // Hide floating menu
+  });
+</script>
+
+</html>

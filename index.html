@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chat Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="end.css">
+</head>
+
+<body>
+  <nav>
+    <p>Chat Server</p>
+  </nav>
+  <div class="glass">
+    <div id="messages"></div>
+  </div>
+  <div class="input-area">
+    <input id="input" type="text" placeholder="Type a message..." disabled>
+    <input id="fileInput" type="file" id="file" />
+    <button id="sendFile" disabled>Send File</button>
+  </div>
+  <script>
+    const socket = io();
+    const messagesDiv = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const fileInput = document.getElementById('fileInput');
+    const sendFileButton = document.getElementById('sendFile');
+
+    // Create floating menu for username and color
+    const floatingMenu = document.createElement('div');
+    floatingMenu.className = 'floating-menu';
+    floatingMenu.innerHTML = `
+      <input id="username" type="text" placeholder="Enter your name..." autofocus>
+      <br>
+      <input id="color" type="color" value="#ffffff" placeholder="Choose message background color" />
+      <br>
+      <button id="setUser">Set</button>
+    `;
+    
+    const overlay = document.createElement('div');
+    overlay.className = 'overlay'
+    document.body.appendChild(overlay);
+    document.body.appendChild(floatingMenu);
+
+    const usernameInput = document.getElementById('username');
+    const colorInput = document.getElementById('color');
+    const setUserButton = document.getElementById('setUser');
+
+    // Check if user data is already in sessionStorage
+    const username = sessionStorage.getItem('username');
+    const color = sessionStorage.getItem('color');
+
+    if (username && color) {
+      usernameInput.value = username;
+      colorInput.value = color;
+      input.disabled = false;
+      sendFileButton.disabled = false;
+      floatingMenu.style.display = 'none'; // Hide floating menu
+       overlay.style.display= 'none';
+   }
+
+    setUserButton.addEventListener('click', function() {
+      const name = usernameInput.value;
+      const colorValue = colorInput.value;
+      sessionStorage.setItem('username', name);
+      sessionStorage.setItem('color', colorValue);
+      input.disabled = false;
+      sendFileButton.disabled = false;
+      floatingMenu.style.display = 'none'; // Hide floating menu
+        overlay.style.display= 'none';
+    });
+
+socket.on('chat message', function(msg) {
+  messagesDiv.innerHTML += msg; // msg will contain HTML with background color
+  messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+});
+
+input.addEventListener('keypress', function(ev) {
+  if (ev.key === 'Enter') {
+    const message = input.value;
+    const fullMessage = `<div class="my-msg" style="background-color: ${color};">${username}: ${message}</div>`;
+    const timestamp = new Date().toLocaleString();
+    socket.emit('chat message', `${fullMessage} <span style="display:none;">${timestamp}</span>`); // Send timestamp hidden
+    input.value = '';
+
+    // Scroll to the bottom after sending
+    messagesDiv.innerHTML += fullMessage; // Add the message to the div
+    messagesDiv.scrollTop = messagesDiv.scrollHeight; // Scroll to the bottom
+  }
+});
+
+
+
+
+
+sendFileButton.addEventListener('click', function() {
+  const file = fileInput.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      // إرسال الملف كـ Data URL
+      socket.emit('file', { name: file.name, data: event.target.result });
+    };
+    reader.readAsDataURL(file);
+    fileInput.value = ''; // Clear the input
+  }
+});
+
+
+    socket.on('file', function(file) {
+      messagesDiv.innerHTML += `<div class="msg"><a href="${file.data}" download="${file.name}">تحميل: ${file.name}</a></div>`;
+    });
+
+    // Load last 50 messages from messages.txt
+    fetch('/messages.txt')
+      .then(response => response.text())
+      .then(data => {
+        const messages = data.split('\n').slice(-50);
+        messages.forEach(msg => {
+          messagesDiv.innerHTML += msg;
+        });
+      });
+  </script>
+</body>
+
+</html>
